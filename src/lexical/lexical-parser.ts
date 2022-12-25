@@ -23,12 +23,12 @@ export class LexicalParser {
         return matcher[0].length
       }
     }
-    throw `Happy little invalid expression:" ${nextToken}`
+    throw `Happy little invalid expression: ${nextToken}`
   }
 
   parse(): Array<Token> {
     let position = 0
-    while (position < this.source.length) {
+    while (this.source && position < this.source.length) {
       position += this.nextToken(position)
     }
     return this.tokens

@@ -21,3 +21,10 @@ test("test parse", () => {
   expect(tokens[3].type).toBe(TokenType.Color)
   expect(tokens[3].value).toBe("#fb3c2d")
 })
+
+test("test error", () => {
+  expect(() => {
+    const lexicalParser = new LexicalParser("bad")
+    lexicalParser.parse()
+  }).toThrow("Happy little invalid expression: bad")
+})
