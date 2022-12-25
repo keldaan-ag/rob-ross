@@ -1,5 +1,6 @@
 import { LogicalValue, Value } from "../expressions/value"
-import { UnaryOperatorExpression } from "./operator-expression"
+import { UnaryOperatorExpression } from "../expressions/operator-expression"
+import { Expression } from "../expressions/expression"
 
 export class NotOperator<T> extends UnaryOperatorExpression<T> {
   calc(value: Value<T>): Value<T> {
@@ -9,7 +10,7 @@ export class NotOperator<T> extends UnaryOperatorExpression<T> {
       throw `Happy little accident while performing NOT operator for non logical value ${value}`
     }
   }
-  constructor(value: Value<T>) {
+  constructor(value: Expression) {
     super(value)
   }
 }

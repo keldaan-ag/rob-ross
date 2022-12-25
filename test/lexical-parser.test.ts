@@ -1,4 +1,4 @@
-import { LexicalParser } from "../src/lexical-parser"
+import { LexicalParser } from "../src/lexical/lexical-parser"
 import { TokenType } from "../src/types/token-type"
 
 test("test nextToken", () => {

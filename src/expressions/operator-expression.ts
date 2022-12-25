@@ -1,7 +1,13 @@
-import { Expression } from "../expressions/expression"
-import { Value } from "../expressions/value"
+import { Expression } from "./expression"
+import { Value } from "./value"
 
-export abstract class UnaryOperatorExpression<T> implements Expression {
+export abstract class OperatorExpression implements Expression {
+  evaluate(): Value<any> {
+    throw new Error("Method not implemented.")
+  }
+}
+
+export abstract class UnaryOperatorExpression<T> implements OperatorExpression {
   value: Expression
   abstract calc(value: Value<T>): Value<T>
   constructor(value: Expression) {
@@ -12,7 +18,9 @@ export abstract class UnaryOperatorExpression<T> implements Expression {
   }
 }
 
-export abstract class BinaryOperatorExpression<T> implements Expression {
+export abstract class BinaryOperatorExpression<T>
+  implements OperatorExpression
+{
   left: Expression
   right: Expression
   abstract calc(left: Value<T>, right: Value<T>): Value<T>

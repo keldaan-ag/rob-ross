@@ -1,5 +1,5 @@
-import { Token } from "./token"
-import { TokenType } from "./types/token-type"
+import { Token } from "../types/token"
+import { TokenType } from "../types/token-type"
 
 export class LexicalParser {
   tokens: Array<Token>

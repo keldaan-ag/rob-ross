@@ -1,6 +1,6 @@
 import { Expression } from "../expressions/expression"
 import { LogicalValue, Value } from "../expressions/value"
-import { BinaryOperatorExpression } from "./operator-expression"
+import { BinaryOperatorExpression } from "../expressions/operator-expression"
 
 export class LessThanOperator<T> extends BinaryOperatorExpression<T> {
   calc(left: Value<T>, right: Value<T>): Value<T> {
