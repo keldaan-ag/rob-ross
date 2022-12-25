@@ -2,14 +2,14 @@ import { LexicalParser } from "../src/lexical-parser"
 import { TokenType } from "../src/types/token-type"
 
 test("test nextToken", () => {
-  const lexicalParser = new LexicalParser("paint red")
+  const lexicalParser = new LexicalParser("paint #ff00a2")
   expect(lexicalParser.nextToken(0)).toBe(5)
   expect(lexicalParser.nextToken(5)).toBe(1)
-  expect(lexicalParser.nextToken(6)).toBe(3)
+  expect(lexicalParser.nextToken(6)).toBe(7)
 })
 
 test("test parse", () => {
-  const lexicalParser = new LexicalParser("step 1 paint blue")
+  const lexicalParser = new LexicalParser("step 1 paint #fb3c2d")
   const tokens = lexicalParser.parse()
   expect(tokens.length).toBe(4)
   expect(tokens[0].type).toBe(TokenType.Keyword)
@@ -19,5 +19,5 @@ test("test parse", () => {
   expect(tokens[2].type).toBe(TokenType.Keyword)
   expect(tokens[2].value).toBe("paint")
   expect(tokens[3].type).toBe(TokenType.Color)
-  expect(tokens[3].value).toBe("blue")
+  expect(tokens[3].value).toBe("#fb3c2d")
 })

@@ -18,8 +18,7 @@ export class LexicalParser {
       const matcher = nextToken.match(pattern)
       if (matcher && matcher.index === 0) {
         if (tokenType !== TokenType.Whitespace) {
-          const value = matcher.length > 1 ? matcher[1] : matcher[0]
-          this.tokens.push(new Token(tokenType, value))
+          this.tokens.push(new Token(tokenType, matcher[0]))
         }
         return matcher[0].length
       }

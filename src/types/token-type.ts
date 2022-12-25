@@ -1,11 +1,11 @@
 export enum TokenType {
   Whitespace = "[\\s\\t\\n\\r]",
-  Keyword = "(if|then|end|paint|step)",
-  Color = "red|blue|green",
-  GroupDivider = "(\\[|\\])",
+  Keyword = "(if|goto|end|paint|step|set|calc)",
+  Color = "#([a-f0-9]{3}){1,2}\\b",
   Logical = "true|false",
   Numeric = "[0-9]+",
-  Text = '"([^"]*)"',
-  Variable = "[a-zA-Z_]+[a-zA-Z0-9_]*",
+  Memory = "(mem1|mem2|mem3|mem4)",
   Operator = "(\\+|\\-|\\>|\\<|\\={1,2}|\\!|\\:{2})",
 }
+
+export type Memory = "mem1" | "mem2" | "mem3" | "mem4"
