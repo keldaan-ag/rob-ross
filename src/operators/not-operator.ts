@@ -7,7 +7,7 @@ export class NotOperator<T> extends UnaryOperatorExpression<T> {
     if (value instanceof LogicalValue) {
       return new LogicalValue(!value.value) as Value<T>
     } else {
-      throw `Happy little accident while performing NOT operator for non logical value ${value}`
+      throw `Happy little accident while performing NOT operator for non logical value ${value.value}`
     }
   }
   constructor(value: Expression) {
