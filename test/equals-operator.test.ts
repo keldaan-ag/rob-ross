@@ -1,8 +1,17 @@
-import { ColorValue, MemoryValue, NumericValue } from "../src/expressions/value"
+import {
+  ColorValue,
+  MemoryValue,
+  NumericValue,
+  Value,
+} from "../src/expressions/value"
 import { VariableExpression } from "../src/expressions/variable-expression"
 import { EqualsOperator } from "../src/operators/equals-operator"
 
 test("test equals", () => {
+  const variables = new Map<string, Value<any>>()
+  variables.set("mem1", new NumericValue(3))
+  variables.set("mem2", new NumericValue(4))
+
   let additionOperator = new EqualsOperator(
     new NumericValue(2),
     new NumericValue(3)
@@ -16,14 +25,14 @@ test("test equals", () => {
   expect(additionOperator.evaluate().value).toBe(true)
 
   additionOperator = new EqualsOperator(
-    new VariableExpression("mem1"),
-    new VariableExpression("mem1")
+    new VariableExpression("mem1", variables),
+    new VariableExpression("mem1", variables)
   )
   expect(additionOperator.evaluate().value).toBe(true)
 
   additionOperator = new EqualsOperator(
-    new VariableExpression("mem1"),
-    new VariableExpression("mem2")
+    new VariableExpression("mem1", variables),
+    new VariableExpression("mem2", variables)
   )
   expect(additionOperator.evaluate().value).toBe(false)
 

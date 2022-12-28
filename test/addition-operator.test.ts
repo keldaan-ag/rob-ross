@@ -1,3 +1,4 @@
+import { OperatorExpression } from "../src/expressions/operator-expression"
 import { ColorValue, MemoryValue, NumericValue } from "../src/expressions/value"
 import { AdditionOperator } from "../src/operators/addition-operator"
 

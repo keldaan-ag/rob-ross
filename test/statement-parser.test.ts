@@ -42,3 +42,44 @@ test("re assign variables", () => {
   expect(interpreter.variables.get("mem1")?.value).toBe(4)
   expect(interpreter.variables.get("mem2")?.value).toBe(0)
 })
+
+test("boolean assign", () => {
+  const interpreter = new RobRoss()
+  interpreter.execute(`
+    mem1 = true
+    mem1 = false
+    `)
+  expect(interpreter.variables.get("mem1")?.value).toBe(false)
+})
+
+test("variable assign", () => {
+  const interpreter = new RobRoss()
+  interpreter.execute(`
+      mem1 = 0
+      mem2 = mem1
+      mem1 = mem1 + 1
+      `)
+  expect(interpreter.variables.get("mem1")?.value).toBe(1)
+  expect(interpreter.variables.get("mem2")?.value).toBe(0)
+})
+
+test("variable assign", () => {
+  const interpreter = new RobRoss()
+  interpreter.execute(`
+      mem1 = 0
+      mem2 = mem1
+      mem1 = mem1 + 1
+      `)
+  expect(interpreter.variables.get("mem1")?.value).toBe(1)
+  expect(interpreter.variables.get("mem2")?.value).toBe(0)
+})
+
+test("variable assign to undeclared variable", () => {
+  const interpreter = new RobRoss()
+  interpreter.execute(`
+      mem2 = mem1
+      mem3 = mem2!
+      `)
+  expect(interpreter.variables.get("mem2")?.value).toBe(false)
+  expect(interpreter.variables.get("mem3")?.value).toBe(true)
+})

@@ -2,9 +2,7 @@ import { Expression } from "./expression"
 import { Value } from "./value"
 
 export abstract class OperatorExpression implements Expression {
-  evaluate(): Value<any> {
-    throw new Error("Method not implemented.")
-  }
+  abstract evaluate(): Value<any>
 }
 
 export abstract class UnaryOperatorExpression<T> implements OperatorExpression {

@@ -1,20 +1,21 @@
 import { Expression } from "./expression"
 import { Memory } from "../types/token-type"
-import { MemoryValue, Value } from "./value"
+import { LogicalValue, MemoryValue, Value } from "./value"
 
 export class VariableExpression implements Expression {
   name: Memory
   value: Value<any> | undefined
+  variables: Map<String, Value<any>>
 
-  constructor(name: Memory) {
+  constructor(name: Memory, variables: Map<String, Value<any>>) {
     this.name = name
-    this.value = undefined
+    this.variables = variables
   }
   evaluate(): Value<any> {
-    if (this.value === undefined) {
-      return new MemoryValue(this.name)
+    if (this.variables.has(this.name)) {
+      return this.variables.get(this.name)!
     } else {
-      return this.value
+      return new LogicalValue(false)
     }
   }
 }

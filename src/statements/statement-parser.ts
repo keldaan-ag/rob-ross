@@ -31,10 +31,14 @@ export class StatementParser {
     this.variables = variables
   }
 
-  peek(type: TokenType, value: string): boolean {
+  peek(type: TokenType, value?: string): boolean {
     if (this.position < this.tokens.length) {
       const token = this.tokens[this.position]
-      return type == token.type && token.value === value
+      if (value === undefined) {
+        return type == token.type
+      } else {
+        return type == token.type && token.value === value
+      }
     }
     return false
   }
@@ -53,8 +57,8 @@ export class StatementParser {
     switch (token.type) {
       case TokenType.Memory:
         if (this.peek(TokenType.Operator, "=")) {
-          this.next(TokenType.Operator, "=" as TokenType)
-          const value = this.nextExpression()
+          this.next(TokenType.Operator)
+          const value = this.readExpression()
           return new AssignStatement(
             token.value as Memory,
             value,
@@ -122,44 +126,44 @@ export class StatementParser {
         return new NumericValue(parseInt(value))
 
       default:
-        return new VariableExpression(value as Memory)
+        return new VariableExpression(value as Memory, this.variables)
     }
   }
 
   readExpression(): Expression {
-    let left = this.nextExpression()
-
-    const operation = this.next(TokenType.Operator)
-    const operatorType = operation.value
-    if (operatorType === "!") {
-      return new NotOperator(left)
+    const left = this.nextExpression()
+    while (this.peek(TokenType.Operator)) {
+      const operation = this.next(TokenType.Operator)
+      const operator = operation.value
+      if (operator === "!") {
+        return new NotOperator(left)
+      }
+      let operatorClass
+      switch (operator) {
+        case "+":
+          operatorClass = AdditionOperator
+          break
+        case "-":
+          operatorClass = SubstractionOperator
+          break
+        case "==":
+          operatorClass = SubstractionOperator
+          break
+        case ">":
+          operatorClass = GreaterThanOperator
+          break
+        case "<":
+          operatorClass = LessThanOperator
+          break
+        default:
+          operatorClass = undefined
+          break
+      }
+      if (operatorClass !== undefined) {
+        const right = this.nextExpression()
+        return new operatorClass(left, right)
+      }
     }
-    let operatorClass
-    switch (operatorType) {
-      case "+":
-        operatorClass = AdditionOperator
-        break
-      case "-":
-        operatorClass = SubstractionOperator
-        break
-      case "==":
-        operatorClass = SubstractionOperator
-        break
-      case ">":
-        operatorClass = GreaterThanOperator
-        break
-      case "<":
-        operatorClass = LessThanOperator
-        break
-      default:
-        operatorClass = undefined
-        break
-    }
-    if (operatorClass !== undefined) {
-      const right = this.nextExpression()
-      return new operatorClass(left, right)
-    } else {
-      throw `Happy little error while reading expression ${left}`
-    }
+    return left
   }
 }

@@ -1,8 +1,12 @@
-import { MemoryValue, NumericValue } from "../src/expressions/value"
+import { LogicalValue, NumericValue, Value } from "../src/expressions/value"
 import { VariableExpression } from "../src/expressions/variable-expression"
 import { GreaterThanOperator } from "../src/operators/greater-than-operator"
 
 test("test", () => {
+  const variables = new Map<string, Value<any>>()
+  variables.set("mem1", new NumericValue(3))
+  variables.set("mem2", new NumericValue(4))
+
   let operator = new GreaterThanOperator(
     new NumericValue(2),
     new NumericValue(3)
@@ -14,29 +18,24 @@ test("test", () => {
 
   operator = new GreaterThanOperator(new NumericValue(4), new NumericValue(3))
   expect(operator.evaluate().value).toBe(true)
+
+  operator = new GreaterThanOperator(
+    new VariableExpression("mem2", variables),
+    new VariableExpression("mem1", variables)
+  )
+  expect(operator.evaluate().value).toBe(true)
 })
 
 test("test error", () => {
   expect(() => {
-    const leftExpression = new NumericValue(2)
-    const rightExpression = new MemoryValue("mem1")
-    const operator = new GreaterThanOperator(leftExpression, rightExpression)
-    operator.evaluate()
-  }).toThrow('Happy little accident while comparing ">" between 2 mem1')
+    const variables = new Map<string, Value<any>>()
+    variables.set("mem1", new NumericValue(3))
+    variables.set("mem2", new LogicalValue(true))
 
-  expect(() => {
     const operator = new GreaterThanOperator(
-      new VariableExpression("mem1"),
-      new VariableExpression("mem1")
+      new VariableExpression("mem1", variables),
+      new VariableExpression("mem2", variables)
     )
     operator.evaluate()
-  }).toThrow('Happy little accident while comparing ">" between mem1 mem1')
-
-  expect(() => {
-    const operator = new GreaterThanOperator(
-      new VariableExpression("mem1"),
-      new VariableExpression("mem2")
-    )
-    operator.evaluate()
-  }).toThrow('Happy little accident while comparing ">" between mem1 mem2')
+  }).toThrow('Happy little accident while comparing ">" between 3 true')
 })
