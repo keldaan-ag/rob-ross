@@ -25,10 +25,10 @@ export class StatementParser {
   position: number
   variables: Map<String, Value<any>>
 
-  constructor(tokens: Array<Token>) {
+  constructor(tokens: Array<Token>, variables: Map<String, Value<any>>) {
     this.tokens = tokens
     this.position = 0
-    this.variables = new Map<String, Value<any>>()
+    this.variables = variables
   }
 
   peek(type: TokenType, value: string): boolean {
@@ -52,9 +52,17 @@ export class StatementParser {
     const token = this.next(TokenType.Keyword, TokenType.Memory)
     switch (token.type) {
       case TokenType.Memory:
-        this.next(TokenType.Operator, "=" as TokenType)
-        const value = this.readExpression()
-        return new AssignStatement(token.value as Memory, value)
+        if (this.peek(TokenType.Operator, "=")) {
+          this.next(TokenType.Operator, "=" as TokenType)
+          const value = this.nextExpression()
+          return new AssignStatement(
+            token.value as Memory,
+            value,
+            this.variables
+          )
+        } else {
+          throw "Happy little accident expecting = lexeme"
+        }
 
       case TokenType.Keyword:
         let expression: Expression
@@ -85,14 +93,14 @@ export class StatementParser {
       const token = this.tokens[this.position]
       for (let i = 0; i < tokenTypes.length; i++) {
         const t = tokenTypes[i]
-        if (t === token.type) {
+        if (token.type === t) {
           this.position++
           return token
         }
       }
     }
     const previousToken = this.tokens[this.position - 1]
-    throw `After the happy little ${previousToken} declaration expected any of the following lexemes ${tokenTypes}`
+    throw `After the happy little ${previousToken.value} declaration expected any of the following lexemes ${tokenTypes}`
   }
 
   nextExpression(): Expression {

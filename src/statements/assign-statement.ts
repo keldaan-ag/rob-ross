@@ -6,14 +6,19 @@ import { Statement } from "./statement"
 export class AssignStatement implements Statement {
   name: Memory
   expression: Expression
-  variableSetter: [string, Value<any>] | undefined
+  variables: Map<String, Value<any>>
 
-  constructor(name: Memory, expression: Expression) {
+  constructor(
+    name: Memory,
+    expression: Expression,
+    variables: Map<String, Value<any>>
+  ) {
     this.name = name
     this.expression = expression
+    this.variables = variables
   }
 
   execute(): void {
-    this.variableSetter = [this.name, this.expression.evaluate()]
+    this.variables.set(this.name, this.expression.evaluate())
   }
 }

@@ -1,14 +1,14 @@
 import { ColorValue, MemoryValue, NumericValue } from "../src/expressions/value"
 import { SubstractionOperator } from "../src/operators/substraction-operator"
 
-test("test addition", () => {
+test("test sub", () => {
   const leftExpression = new NumericValue(4)
   const rightExpression = new NumericValue(2)
   const operator = new SubstractionOperator(leftExpression, rightExpression)
   expect(operator.evaluate().value).toBe(2)
 })
 
-test("test error addition", () => {
+test("test error sub", () => {
   expect(() => {
     const leftExpression = new NumericValue(2)
     const rightExpression = new MemoryValue("mem1")
