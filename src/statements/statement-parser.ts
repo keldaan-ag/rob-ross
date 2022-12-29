@@ -16,19 +16,30 @@ import { AdditionOperator } from "../operators/addition-operator"
 import { SubstractionOperator } from "../operators/substraction-operator"
 import { GreaterThanOperator } from "../operators/greater-than-operator"
 import { LessThanOperator } from "../operators/less-than-operator"
-import { PrintStatement } from "./print-statement"
+import { PaintStatement } from "./paint-statement"
 import { ConditionStatement } from "./condition-statement"
 import { CompositeStatement } from "./composite-statement"
+import { Canvas } from "../space/canvas"
+import { Robot } from "../space/robot"
 
 export class StatementParser {
   tokens: Array<Token>
   position: number
   variables: Map<String, Value<any>>
+  canvas: Canvas
+  robot: Robot
 
-  constructor(tokens: Array<Token>, variables: Map<String, Value<any>>) {
+  constructor(
+    tokens: Array<Token>,
+    variables: Map<String, Value<any>>,
+    canvas: Canvas,
+    robot: Robot
+  ) {
     this.tokens = tokens
     this.position = 0
     this.variables = variables
+    this.canvas = canvas
+    this.robot = robot
   }
 
   peek(type: TokenType, value?: string): boolean {
@@ -65,7 +76,7 @@ export class StatementParser {
             this.variables
           )
         } else {
-          throw "Happy little accident expecting = lexeme"
+          throw "Happy little accident expecting = symbol"
         }
 
       case TokenType.Keyword:
@@ -73,18 +84,22 @@ export class StatementParser {
         switch (token.value) {
           case "if":
             expression = this.readExpression()
-            this.next(TokenType.Keyword, "then" as TokenType)
-            const conditionStatement = new ConditionStatement(expression)
-            while (!this.peek(TokenType.Keyword, "end")) {
-              const statement = this.parseExpression()
-              conditionStatement.addStatement(statement)
+            if (this.peek(TokenType.Keyword, "then")) {
+              this.next(TokenType.Keyword)
+              const conditionStatement = new ConditionStatement(expression)
+              while (!this.peek(TokenType.Keyword, "end")) {
+                const statement = this.parseExpression()
+                conditionStatement.addStatement(statement)
+              }
+              this.next(TokenType.Keyword)
+              return conditionStatement
+            } else {
+              throw "Happy little accident expecting then lexeme"
             }
-            this.next(TokenType.Keyword, "end" as TokenType)
-            return conditionStatement
 
-          case "print":
+          case "paint":
             expression = this.readExpression()
-            return new PrintStatement(expression)
+            return new PaintStatement(expression, this.canvas, this.robot)
         }
       default:
         throw `Happy little syntax error with starting lexem ${token}`

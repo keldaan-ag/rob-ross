@@ -83,3 +83,47 @@ test("variable assign to undeclared variable", () => {
   expect(interpreter.variables.get("mem2")?.value).toBe(false)
   expect(interpreter.variables.get("mem3")?.value).toBe(true)
 })
+
+test("if test", () => {
+  const interpreter = new RobRoss()
+  interpreter.execute(`
+    mem1 = 1
+    if mem1 > 0 then
+    mem1 = 2
+    end
+  `)
+  expect(interpreter.variables.get("mem1")?.value).toBe(2)
+})
+
+test("bad if", () => {
+  expect(() => {
+    const interpreter = new RobRoss()
+    interpreter.execute(`
+      mem1 = 1
+      if 5 then
+      mem1 = 2
+      end
+    `)
+  }).toThrow("Happy little accident while comparing non logical value 5")
+})
+
+test("paint test", () => {
+  const interpreter = new RobRoss()
+  interpreter.execute(`
+    paint #00ff00
+  `)
+  expect(interpreter.canvas.getValue(interpreter.robot.coordinate)).toBe(
+    "#00ff00"
+  )
+})
+
+test("paint mem test", () => {
+  const interpreter = new RobRoss()
+  interpreter.execute(`
+    mem1 = #00ff00
+    paint mem1
+  `)
+  expect(interpreter.canvas.getValue(interpreter.robot.coordinate)).toBe(
+    "#00ff00"
+  )
+})

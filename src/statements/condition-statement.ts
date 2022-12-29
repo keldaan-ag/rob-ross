@@ -17,7 +17,7 @@ export class ConditionStatement extends CompositeStatement {
         super.execute()
       }
     } else {
-      throw `Happy little accident while comparing non logical value ${value}`
+      throw `Happy little accident while comparing non logical value ${value.value}`
     }
   }
 }
