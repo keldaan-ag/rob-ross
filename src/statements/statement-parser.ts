@@ -21,6 +21,7 @@ import { ConditionStatement } from "./condition-statement"
 import { CompositeStatement } from "./composite-statement"
 import { Canvas } from "../space/canvas"
 import { Robot } from "../space/robot"
+import { EqualsOperator } from "../operators/equals-operator"
 
 export class StatementParser {
   tokens: Array<Token>
@@ -98,7 +99,7 @@ export class StatementParser {
             return new PaintStatement(expression, this.canvas, this.robot)
         }
       default:
-        throw `Happy little syntax error with starting lexem ${token}`
+        throw `Happy little syntax error with starting lexem ${token.value}`
     }
   }
 
@@ -158,16 +159,13 @@ export class StatementParser {
           operatorClass = SubstractionOperator
           break
         case "==":
-          operatorClass = SubstractionOperator
+          operatorClass = EqualsOperator
           break
         case ">":
           operatorClass = GreaterThanOperator
           break
         case "<":
           operatorClass = LessThanOperator
-          break
-        default:
-          operatorClass = undefined
           break
       }
       if (operatorClass !== undefined) {

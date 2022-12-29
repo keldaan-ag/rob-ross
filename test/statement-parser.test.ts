@@ -107,6 +107,18 @@ test("bad if", () => {
   }).toThrow("Happy little accident while comparing non logical value 5")
 })
 
+test("missing then", () => {
+  expect(() => {
+    const interpreter = new RobRoss()
+    interpreter.execute(`
+      mem1 = 1
+      if 5
+      mem1 = 2
+      end
+    `)
+  }).toThrow("Happy little accident expecting then lexeme")
+})
+
 test("paint test", () => {
   const interpreter = new RobRoss()
   interpreter.execute(`
@@ -135,4 +147,46 @@ test("bad paint", () => {
       paint 8
     `)
   }).toThrow("Happy little accident expecting color lexeme")
+})
+
+test("bad equal", () => {
+  expect(() => {
+    const interpreter = new RobRoss()
+    interpreter.execute(`
+      mem1 5
+    `)
+  }).toThrow("Happy little accident expecting = symbol")
+})
+
+test("bad end", () => {
+  expect(() => {
+    const interpreter = new RobRoss()
+    interpreter.execute(`
+      mem1 = 4
+      end
+    `)
+  }).toThrow("Happy little syntax error with starting lexem end")
+})
+
+test("bad declaration", () => {
+  expect(() => {
+    const interpreter = new RobRoss()
+    interpreter.execute(`
+      if 5 < paint
+    `)
+  }).toThrow(
+    "After the happy little < declaration expected any of the following lexemes true|false,[a-zA-Z_]+[a-zA-Z0-9_]*,[0-9]+,#([a-f0-9]{3}){1,2}\\b"
+  )
+})
+
+test("substraction", () => {
+  const interpreter = new RobRoss()
+  interpreter.execute("a = 5 b = 7 c = b-a")
+  expect(interpreter.variables.get("c")?.value).toBe(2)
+})
+
+test("equal", () => {
+  const interpreter = new RobRoss()
+  interpreter.execute("a = 5 if a == 5 then b = 3 end")
+  expect(interpreter.variables.get("b")?.value).toBe(3)
 })
