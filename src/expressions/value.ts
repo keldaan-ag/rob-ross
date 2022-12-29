@@ -1,5 +1,4 @@
 import { Expression } from "./expression"
-import { Memory } from "../types/token-type"
 
 export class Value<T> implements Expression {
   value: T
@@ -30,8 +29,8 @@ export class LogicalValue extends Value<boolean> {
   }
 }
 
-export class MemoryValue extends Value<Memory> {
-  constructor(value: Memory) {
+export class VariableValue extends Value<string> {
+  constructor(value: string) {
     super(value)
   }
 }

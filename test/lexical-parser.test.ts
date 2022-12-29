@@ -24,7 +24,7 @@ test("test parse", () => {
 
 test("test error", () => {
   expect(() => {
-    const lexicalParser = new LexicalParser("bad")
+    const lexicalParser = new LexicalParser("[]")
     lexicalParser.parse()
-  }).toThrow("Happy little invalid expression: bad")
+  }).toThrow("Happy little invalid expression: []")
 })

@@ -127,3 +127,12 @@ test("paint mem test", () => {
     "#00ff00"
   )
 })
+
+test("bad paint", () => {
+  expect(() => {
+    const interpreter = new RobRoss()
+    interpreter.execute(`
+      paint 8
+    `)
+  }).toThrow("Happy little accident expecting color lexeme")
+})

@@ -1,12 +1,12 @@
 import {
   ColorValue,
   LogicalValue,
-  MemoryValue,
+  VariableValue,
   NumericValue,
   Value,
 } from "../expressions/value"
 import { Token } from "../types/token"
-import { Memory, TokenType } from "../types/token-type"
+import { TokenType } from "../types/token-type"
 import { AssignStatement } from "./assign-statement"
 import { Statement } from "./statement"
 import { Expression } from "../expressions/expression"
@@ -64,17 +64,13 @@ export class StatementParser {
   }
 
   parseExpression(): Statement {
-    const token = this.next(TokenType.Keyword, TokenType.Memory)
+    const token = this.next(TokenType.Keyword, TokenType.Variable)
     switch (token.type) {
-      case TokenType.Memory:
+      case TokenType.Variable:
         if (this.peek(TokenType.Operator, "=")) {
           this.next(TokenType.Operator)
           const value = this.readExpression()
-          return new AssignStatement(
-            token.value as Memory,
-            value,
-            this.variables
-          )
+          return new AssignStatement(token.value, value, this.variables)
         } else {
           throw "Happy little accident expecting = symbol"
         }
@@ -126,7 +122,7 @@ export class StatementParser {
     const token = this.next(
       TokenType.Color,
       TokenType.Logical,
-      TokenType.Memory,
+      TokenType.Variable,
       TokenType.Numeric
     )
     const value = token.value
@@ -141,7 +137,7 @@ export class StatementParser {
         return new NumericValue(parseInt(value))
 
       default:
-        return new VariableExpression(value as Memory, this.variables)
+        return new VariableExpression(value, this.variables)
     }
   }
 

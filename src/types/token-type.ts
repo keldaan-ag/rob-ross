@@ -4,8 +4,6 @@ export enum TokenType {
   Color = "#([a-f0-9]{3}){1,2}\\b",
   Logical = "true|false",
   Numeric = "[0-9]+",
-  Memory = "(mem1|mem2|mem3|mem4)",
+  Variable = "[a-zA-Z_]+[a-zA-Z0-9_]*",
   Operator = "(\\+|\\-|\\>|\\<|\\={1,2}|\\!)",
 }
-
-export type Memory = "mem1" | "mem2" | "mem3" | "mem4"

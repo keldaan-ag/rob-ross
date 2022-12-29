@@ -1,6 +1,6 @@
 import {
   LogicalValue,
-  MemoryValue,
+  VariableValue,
   NumericValue,
   Value,
 } from "../src/expressions/value"

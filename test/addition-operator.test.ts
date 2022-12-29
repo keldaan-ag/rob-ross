@@ -1,5 +1,9 @@
 import { OperatorExpression } from "../src/expressions/operator-expression"
-import { ColorValue, MemoryValue, NumericValue } from "../src/expressions/value"
+import {
+  ColorValue,
+  VariableValue,
+  NumericValue,
+} from "../src/expressions/value"
 import { AdditionOperator } from "../src/operators/addition-operator"
 
 test("test addition", () => {
@@ -12,7 +16,7 @@ test("test addition", () => {
 test("test error addition", () => {
   expect(() => {
     const leftExpression = new NumericValue(2)
-    const rightExpression = new MemoryValue("mem1")
+    const rightExpression = new VariableValue("mem1")
     const additionOperator = new AdditionOperator(
       leftExpression,
       rightExpression

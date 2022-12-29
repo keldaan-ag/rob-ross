@@ -1,4 +1,8 @@
-import { ColorValue, MemoryValue, NumericValue } from "../src/expressions/value"
+import {
+  ColorValue,
+  VariableValue,
+  NumericValue,
+} from "../src/expressions/value"
 import { SubstractionOperator } from "../src/operators/substraction-operator"
 
 test("test sub", () => {
@@ -11,7 +15,7 @@ test("test sub", () => {
 test("test error sub", () => {
   expect(() => {
     const leftExpression = new NumericValue(2)
-    const rightExpression = new MemoryValue("mem1")
+    const rightExpression = new VariableValue("mem1")
     const operator = new SubstractionOperator(leftExpression, rightExpression)
     operator.evaluate()
   }).toThrow('Happy little accident while comparing "-" between 2 mem1')

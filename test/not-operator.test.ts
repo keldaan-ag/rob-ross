@@ -1,7 +1,7 @@
 import {
   ColorValue,
   LogicalValue,
-  MemoryValue,
+  VariableValue,
   NumericValue,
 } from "../src/expressions/value"
 import { NotOperator } from "../src/operators/not-operator"
@@ -32,7 +32,7 @@ test("test error", () => {
   )
 
   expect(() => {
-    const expression = new MemoryValue("mem1")
+    const expression = new VariableValue("mem1")
     const operator = new NotOperator(expression)
     operator.evaluate()
   }).toThrow(

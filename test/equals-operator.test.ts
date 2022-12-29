@@ -1,6 +1,6 @@
 import {
   ColorValue,
-  MemoryValue,
+  VariableValue,
   NumericValue,
   Value,
 } from "../src/expressions/value"
@@ -52,7 +52,7 @@ test("test equals", () => {
 test("test error equals", () => {
   expect(() => {
     const leftExpression = new NumericValue(2)
-    const rightExpression = new MemoryValue("mem1")
+    const rightExpression = new VariableValue("mem1")
     const operator = new EqualsOperator(leftExpression, rightExpression)
     operator.evaluate()
   }).toThrow('Happy little accident while comparing "===" between 2 mem1')
