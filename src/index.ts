@@ -1,9 +1,10 @@
 import { Canvas } from "./space/canvas"
 import { Value } from "./expressions/value"
 import { LexicalParser } from "./lexical/lexical-parser"
-import { StatementParser } from "./statements/statement-parser"
+import { StatementParser } from "./statement-parser"
 import { Config } from "./types/config"
 import { Robot } from "./space/robot"
+import { CompositeStatement } from "./statements/composite-statement"
 
 export class RobRoss {
   variables: Map<String, Value<any>>
@@ -22,13 +23,8 @@ export class RobRoss {
   execute(code: string) {
     const lexicalParser = new LexicalParser(code)
     const tokens = lexicalParser.parse()
-    const statementParser = new StatementParser(
-      tokens,
-      this.variables,
-      this.canvas,
-      this.robot
-    )
-    const statement = statementParser.parse()
+    const statement = new CompositeStatement()
+    StatementParser.parse(statement, tokens, this.canvas, this.robot)
     statement.execute()
   }
 }

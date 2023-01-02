@@ -3,21 +3,24 @@ import { LogicalValue } from "../expressions/value"
 import { CompositeStatement } from "./composite-statement"
 
 export class ConditionStatement extends CompositeStatement {
-  condition: Expression
+  cases: Map<Expression, CompositeStatement>
 
-  constructor(condition: Expression) {
+  constructor() {
     super()
-    this.condition = condition
+    this.cases = new Map<Expression, CompositeStatement>()
   }
 
   execute(): void {
-    const value = this.condition.evaluate()
-    if (value instanceof LogicalValue) {
-      if (value.value) {
-        super.execute()
+    this.cases.forEach((statement, entry) => {
+      const conditionValue = entry.evaluate()
+
+      if (conditionValue instanceof LogicalValue) {
+        if (conditionValue.value) {
+          statement.execute()
+        }
+      } else {
+        throw `Happy little accident while comparing non logical value ${conditionValue.value}`
       }
-    } else {
-      throw `Happy little accident while comparing non logical value ${value.value}`
-    }
+    })
   }
 }
