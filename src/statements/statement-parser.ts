@@ -22,6 +22,8 @@ import { CompositeStatement } from "./composite-statement"
 import { Canvas } from "../space/canvas"
 import { Robot } from "../space/robot"
 import { EqualsOperator } from "../operators/equals-operator"
+import { StepStatement } from "./step-statement"
+import { LookExpression } from "../expressions/look-expression"
 
 export class StatementParser {
   tokens: Array<Token>
@@ -97,6 +99,13 @@ export class StatementParser {
           case "paint":
             expression = this.readExpression()
             return new PaintStatement(expression, this.canvas, this.robot)
+
+          case "step":
+            expression = this.readExpression()
+            return new StepStatement(expression, this.canvas, this.robot)
+
+          case "look":
+            throw "Happy little accident with expression that can't start with look keyword"
         }
       default:
         throw `Happy little syntax error with starting lexem ${token.value}`
@@ -124,7 +133,8 @@ export class StatementParser {
       TokenType.Color,
       TokenType.Logical,
       TokenType.Variable,
-      TokenType.Numeric
+      TokenType.Numeric,
+      TokenType.Keyword
     )
     const value = token.value
     switch (token.type) {
@@ -136,6 +146,12 @@ export class StatementParser {
 
       case TokenType.Numeric:
         return new NumericValue(parseInt(value))
+
+      case TokenType.Keyword:
+        if (value === "look") {
+          return new LookExpression(this.robot, this.canvas)
+        }
+        throw "Happy little accident, only look keyword is allowed"
 
       default:
         return new VariableExpression(value, this.variables)

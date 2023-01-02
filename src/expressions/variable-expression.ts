@@ -1,5 +1,5 @@
 import { Expression } from "./expression"
-import { LogicalValue, VariableValue, Value } from "./value"
+import { LogicalValue, Value } from "./value"
 
 export class VariableExpression implements Expression {
   name: string

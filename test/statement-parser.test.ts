@@ -174,9 +174,7 @@ test("bad declaration", () => {
     interpreter.execute(`
       if 5 < paint
     `)
-  }).toThrow(
-    "After the happy little < declaration expected any of the following lexemes true|false,[a-zA-Z_]+[a-zA-Z0-9_]*,[0-9]+,#([a-f0-9]{3}){1,2}\\b"
-  )
+  }).toThrow("Happy little accident, only look keyword is allowed")
 })
 
 test("substraction", () => {
@@ -189,4 +187,53 @@ test("equal", () => {
   const interpreter = new RobRoss()
   interpreter.execute("a = 5 if a == 5 then b = 3 end")
   expect(interpreter.variables.get("b")?.value).toBe(3)
+})
+
+test("step", () => {
+  const interpreter = new RobRoss()
+  interpreter.execute("step 0")
+  expect(interpreter.robot.coordinate.x).toBe(0)
+  expect(interpreter.robot.coordinate.y).toBe(1)
+  interpreter.execute("a=2 step a")
+  expect(interpreter.robot.coordinate.x).toBe(1)
+  expect(interpreter.robot.coordinate.y).toBe(1)
+})
+
+test("error step", () => {
+  expect(() => {
+    const interpreter = new RobRoss()
+    interpreter.execute("step #ff00ff")
+  }).toThrow("Happy little accident expecting numeric lexeme")
+})
+
+test("look", () => {
+  const interpreter = new RobRoss({
+    height: 50,
+    width: 50,
+    coordinate: { x: 25, y: 25 },
+  })
+  interpreter.execute("a = look")
+  expect(interpreter.variables.get("a")?.value).toBe("#ffffff")
+  interpreter.execute("step 4 paint #00ff00 step 2 step 6 b=look")
+  expect(interpreter.variables.get("b")?.value).toBe("#00ff00")
+})
+
+test("look error", () => {
+  expect(() => {
+    const interpreter = new RobRoss()
+    interpreter.execute("look")
+  }).toThrow(
+    "Happy little accident with expression that can't start with look keyword"
+  )
+})
+
+test("operator error", () => {
+  expect(() => {
+    const interpreter = new RobRoss()
+    interpreter.execute(`
+      if 5 < +
+    `)
+  }).toThrow(
+    "After the happy little < declaration expected any of the following lexemes true|false,[a-zA-Z_]+[a-zA-Z0-9_]*,[0-9]+,(if|goto|end|paint|step|then|look),#([a-f0-9]{3}){1,2}\\b"
+  )
 })

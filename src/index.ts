@@ -13,10 +13,10 @@ export class RobRoss {
   constructor(config?: Partial<Config>) {
     this.variables = new Map<String, Value<any>>()
     this.canvas = new Canvas(
-      config?.width ? config.width : 50,
-      config?.height ? config.height : 50
+      config?.width ? config.width : 51,
+      config?.height ? config.height : 51
     )
-    this.robot = new Robot(config?.position)
+    this.robot = new Robot(config?.coordinate)
   }
 
   execute(code: string) {

@@ -1,42 +1,44 @@
 import { Coordinate } from "../types/coordinate"
 
 export class Canvas {
-  rows: number
-  columns: number
-  cell: Array<string | undefined>
+  width: number
+  height: number
+  cells: Array<string>
 
-  constructor(rows: number, colums: number) {
-    this.rows = rows
-    this.columns = colums
-    this.cell = new Array<string | undefined>(this.rows * this.columns)
+  constructor(width: number, height: number) {
+    this.width = width
+    this.height = height
+    this.cells = new Array<string>(this.width * this.height)
   }
 
   getValue(coordinate: Coordinate) {
     if (
       coordinate.x >= 0 &&
-      coordinate.x < this.rows &&
+      coordinate.x < this.width &&
       coordinate.y >= 0 &&
-      coordinate.y < this.columns
+      coordinate.y < this.height
     ) {
-      return this.cell[this.columns * coordinate.x + coordinate.y]
+      const v = this.cells[this.height * coordinate.x + coordinate.y]
+      return v ? v : "#ffffff"
     }
+    throw "Happy little out of bound exception"
   }
 
   setValue(coordinate: Coordinate, value: string) {
     if (
       coordinate.x >= 0 &&
-      coordinate.x < this.rows &&
+      coordinate.x < this.width &&
       coordinate.y >= 0 &&
-      coordinate.y < this.columns
+      coordinate.y < this.height
     ) {
-      this.cell[this.columns * coordinate.x + coordinate.y] = value
+      this.cells[this.height * coordinate.x + coordinate.y] = value
     }
   }
 
-  forEach(callback: (x: number, y: number, tg: string | undefined) => void) {
-    for (let r = 0; r < this.rows; r++) {
-      for (let c = 0; c < this.columns; c++) {
-        callback(r, c, this.cell[this.columns * r + c])
+  forEach(callback: (x: number, y: number, tg: string) => void) {
+    for (let r = 0; r < this.width; r++) {
+      for (let c = 0; c < this.height; c++) {
+        callback(r, c, this.cells[this.height * r + c])
       }
     }
   }
