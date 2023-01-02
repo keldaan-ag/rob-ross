@@ -88,7 +88,7 @@ test("if test", () => {
   const interpreter = new RobRoss()
   interpreter.execute(`
     mem1 = 1
-    if mem1 > 0 then
+    if mem1 > 0
     mem1 = 2
     end
   `)
@@ -100,23 +100,11 @@ test("bad if", () => {
     const interpreter = new RobRoss()
     interpreter.execute(`
       mem1 = 1
-      if 5 then
-      mem1 = 2
-      end
-    `)
-  }).toThrow("Happy little accident while comparing non logical value 5")
-})
-
-test("missing then", () => {
-  expect(() => {
-    const interpreter = new RobRoss()
-    interpreter.execute(`
-      mem1 = 1
       if 5
       mem1 = 2
       end
     `)
-  }).toThrow("Happy little accident expecting then lexeme")
+  }).toThrow("Happy little accident while comparing non logical value 5")
 })
 
 test("paint test", () => {
@@ -185,7 +173,7 @@ test("substraction", () => {
 
 test("equal", () => {
   const interpreter = new RobRoss()
-  interpreter.execute("a = 5 if a == 5 then b = 3 end")
+  interpreter.execute("a = 5 if a == 5 b = 3 end")
   expect(interpreter.variables.get("b")?.value).toBe(3)
 })
 
@@ -221,7 +209,7 @@ test("look", () => {
 test("look error", () => {
   expect(() => {
     const interpreter = new RobRoss()
-    interpreter.execute("look")
+    interpreter.execute("look b = 0")
   }).toThrow(
     "Happy little accident with expression that can't start with look keyword"
   )
@@ -234,6 +222,6 @@ test("operator error", () => {
       if 5 < +
     `)
   }).toThrow(
-    "After the happy little < declaration expected any of the following lexemes true|false,[a-zA-Z_]+[a-zA-Z0-9_]*,[0-9]+,(if|goto|end|paint|step|then|look),#([a-f0-9]{3}){1,2}\\b"
+    "After the happy little < declaration expected any of the following lexemes true|false,[a-zA-Z_]+[a-zA-Z0-9_]*,[0-9]+,(if|elif|else|for|paint|step|look|from|to),#([a-f0-9]{3}){1,2}\\b"
   )
 })

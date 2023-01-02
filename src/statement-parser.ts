@@ -50,6 +50,7 @@ export class StatementParser {
   static parse(
     compositeStatement: CompositeStatement,
     parent: StatementParser | Array<Token>,
+    variables: Map<String, Value<any>>,
     canvas: Canvas,
     robot: Robot
   ) {
@@ -66,7 +67,7 @@ export class StatementParser {
     if (parent instanceof Array<Token>) {
       parser = new StatementParser(
         new TokenStack(parent),
-        new Map<String, Value<any>>(),
+        variables,
         canvas,
         robot,
         compositeStatement
@@ -119,21 +120,30 @@ export class StatementParser {
   }
 
   parseConditionStatement() {
-    const expression = this.readExpression()
-    if (this.tokens.peek(TokenType.Keyword, "then")) {
-      this.tokens.next(TokenType.Keyword)
-      const conditionStatement = new ConditionStatement()
-      while (!this.tokens.peek(TokenType.Keyword, "end")) {
-        const caseCondition = this.readExpression()
-        const caseStatement = new CompositeStatement()
-        StatementParser.parse(caseStatement, this, this.canvas, this.robot)
+    this.tokens.back()
+    const conditionStatement = new ConditionStatement()
 
-        conditionStatement.cases.set(caseCondition, caseStatement)
+    while (!this.tokens.peek(TokenType.Keyword, "end")) {
+      const type = this.tokens.next(TokenType.Keyword)
+      let caseCondition
+      if (type.value === "else") {
+        caseCondition = new LogicalValue(true) //else case does not have the condition
+      } else {
+        caseCondition = this.readExpression()
       }
-      this.tokens.next(TokenType.Keyword)
-    } else {
-      throw "Happy little accident expecting then lexeme"
+      const caseStatement = new CompositeStatement()
+      StatementParser.parse(
+        caseStatement,
+        this,
+        this.variables,
+        this.canvas,
+        this.robot
+      )
+
+      conditionStatement.cases.set(caseCondition, caseStatement)
     }
+    this.tokens.next(TokenType.Keyword)
+    this.compositeStatement.addStatement(conditionStatement)
   }
 
   parseExpression(): void {
@@ -163,27 +173,31 @@ export class StatementParser {
             } else {
               throw "Happy little accident expecting variable lexeme"
             }
+            break
 
           case "if":
+            this.parseConditionStatement()
+            break
 
           case "paint":
             expression = this.readExpression()
             this.compositeStatement.addStatement(
               new PaintStatement(expression, this.canvas, this.robot)
             )
+            break
 
           case "step":
             expression = this.readExpression()
             this.compositeStatement.addStatement(
               new StepStatement(expression, this.canvas, this.robot)
             )
-
-          case "for":
-            expression = this.readExpression()
+            break
 
           case "look":
             throw "Happy little accident with expression that can't start with look keyword"
         }
+        break
+
       default:
         throw `Happy little syntax error with starting lexem ${token.value}`
     }

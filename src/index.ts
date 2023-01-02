@@ -24,7 +24,13 @@ export class RobRoss {
     const lexicalParser = new LexicalParser(code)
     const tokens = lexicalParser.parse()
     const statement = new CompositeStatement()
-    StatementParser.parse(statement, tokens, this.canvas, this.robot)
+    StatementParser.parse(
+      statement,
+      tokens,
+      this.variables,
+      this.canvas,
+      this.robot
+    )
     statement.execute()
   }
 }

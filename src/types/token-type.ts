@@ -1,6 +1,6 @@
 export enum TokenType {
   Whitespace = "[\\s\\t\\n\\r]",
-  Keyword = "(if|for|end|paint|step|then|look|from|to)",
+  Keyword = "(if|elif|else|for|paint|step|look|from|to)",
   Color = "#([a-f0-9]{3}){1,2}\\b",
   Logical = "true|false",
   Numeric = "[0-9]+",
